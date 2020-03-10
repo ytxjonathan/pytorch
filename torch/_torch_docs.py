@@ -2080,7 +2080,7 @@ Example::
 
 add_docstr(torch.floor_divide,
            r"""
-floor_divide(input, other) -> Tensor
+floor_divide(input, other, out=None) -> Tensor
 
 Return the division of the inputs rounded down to the nearest integer. See :func:`torch.div`
 for type promotion and broadcasting rules.
