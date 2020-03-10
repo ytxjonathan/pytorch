@@ -7195,7 +7195,7 @@ a")
     def test_integral_shape_inference(self):
         cu = torch.jit.CompilationUnit('''
         def test_integral_shape_inference(a):
-            return a / a
+            return a // a
         ''')
         inputs = [torch.ones(10, 10).type(torch.LongTensor)]
         outputs = torch.ones(10, 10)
@@ -10016,15 +10016,22 @@ a")
         def isBool(arg):
             return type(arg) == bool or (type(arg) == str and "torch.bool" in arg)
 
+        def isIntegral(arg):
+            return type(arg) == int or (type(arg) == str and "torch.int" in arg)
+
         for op in ops:
             for first_arg in args:
                 for second_arg in args:
                     # subtract not supported for bool
                     if (op == 'sub' or op == 'div') and (isBool(first_arg) or isBool(second_arg)):
                         continue
-                    # div not implemneted correctly for mixed-type or in params
-                    if (op == 'div' and (type(first_arg) != type(second_arg) or type(first_arg) == int)):
-                        continue
+                    # Note: div is not implemented correctly for mixed-type
+                    # or int params
+                    # TODO: restore integral division once it's re-enabled
+                    if (op == 'div' and (type(first_arg) != type(second_arg)
+                                         or type(first_arg) == int
+                                         or isIntegral(first_arg)
+                                         or isIntegral(first_arg))):
                     return_line = "torch.{}({}, {})".format(op, first_arg, second_arg)
                     # uncomment for debugging a failed test:
                     # print("testing {}".format(return_line))

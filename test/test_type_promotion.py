@@ -205,6 +205,9 @@ class TestTypePromotion(TestCase):
                 if op == torch.sub and common_dtype != torch.bool:
                     # Subtraction, the `-` operator, with a bool tensor is not supported.
                     continue
+                # TODO: skip this short-circuit once integer division is reenabled for div
+                if op == torch.div and common_dtype not in (torch.half, torch.float, torch.double):
+                    return
                 first = self._get_test_tensor(device, dt1)
                 second = self._get_test_tensor(device, dt2, op == torch.div)
                 # test ops with non-contiguous tensors
@@ -561,8 +564,13 @@ class TestTypePromotion(TestCase):
             # "mul_cpu" / "div_cpu" not implemented for 'Half'
             self.assertRaises(RuntimeError, lambda: op(s1, d2.view(d2.numel())[0].item()))
 
-    def _run_all_tests_for_sparse_op(self, op_name, device):
+    def _run_all_tests_for_sparse_op(self, op_name, device, floating_only=False):
         dtypes = torch.testing.get_all_math_dtypes(device)
+        if floating_only and self.device_type == 'cuda':
+            dtypes = [torch.half, torch.float, torch.double]
+        elif floating_only:
+            dtypes = [torch.float, torch.double]
+
         for dtype1, dtype2 in itertools.product(dtypes, dtypes):
             for inplace, coalesced in itertools.product([True, False], [True, False]):
                 self._test_sparse_op(op_name, inplace, dtype1, dtype2, device, coalesced)
@@ -575,9 +583,10 @@ class TestTypePromotion(TestCase):
     def test_sparse_mul(self, device):
         self._run_all_tests_for_sparse_op('mul', device)
 
+    # TODO: reenable for integral types once div is reenabled on integral tensors
     @onlyOnCPUAndCUDA
     def test_sparse_div(self, device):
-        self._run_all_tests_for_sparse_op('div', device)
+        self._run_all_tests_for_sparse_op('div', device, floating_only=True)
 
     @onlyOnCPUAndCUDA
     def test_sparse_sub(self, device):
