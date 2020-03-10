@@ -1331,6 +1331,7 @@
   supports_named_tensor: True
 
 - func: floor_divide.Scalar(Tensor self, Scalar other) -> Tensor
+  variants: function, method
   supports_named_tensor: True
 
 - func: floor_divide_.Scalar(Tensor(a!) self, Scalar other) -> Tensor(a!)

@@ -131,11 +131,6 @@ Tensor floor_divide(const Tensor& self, const Tensor& other) {
   return out;
 }
 
-Tensor floor_divide(const Tensor& input, Scalar other) {
-  Tensor out = input / other;
-  return truncate(out);
-}
-
 Tensor& floor_divide_(Tensor& self, const Tensor& other) {
   return native::floor_divide_out(self, self, other);
 }
