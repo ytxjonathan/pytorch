@@ -10032,6 +10032,7 @@ a")
                                          or type(first_arg) == int
                                          or isIntegral(first_arg)
                                          or isIntegral(first_arg))):
+                        continue
                     return_line = "torch.{}({}, {})".format(op, first_arg, second_arg)
                     # uncomment for debugging a failed test:
                     # print("testing {}".format(return_line))
