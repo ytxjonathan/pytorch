@@ -2092,6 +2092,9 @@ for type promotion and broadcasting rules.
 Args:
     input (Tensor): the numerator tensor
     other (Tensor or Scalar): the denominator
+    
+Keyword args:
+    {out}
 
 Example::
 
