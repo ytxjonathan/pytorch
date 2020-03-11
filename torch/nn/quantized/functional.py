@@ -368,6 +368,21 @@ def hardtanh(input, min_val=-1., max_val=1., inplace=False):
         return torch._C._nn.hardtanh_(input, min_val, max_val)
     return torch._C._nn.hardtanh(input, min_val, max_val)
 
+def gelu(input):
+    # type: (Tensor) -> Tensor
+    # note: inplace and out not supported in FP, so not added here
+    r"""gelu(input) -> Tensor
+
+    Applies element-wise the quantized version of the function
+    :math:`\text{GELU}(x) = x * \Phi(x)`
+
+    where :math:`\Phi(x)` is the Cumulative Distribution Function for Gaussian Distribution.
+
+    See `Gaussian Error Linear Units (GELUs) <https://arxiv.org/abs/1606.08415>`_.
+    """
+    result = torch._C._nn.gelu(input)
+    return result
+
 def clamp(input, min_, max_):
     # type: (Tensor, float, float) -> Tensor
     r"""float(input, min_, max_) -> Tensor
