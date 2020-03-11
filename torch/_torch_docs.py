@@ -2093,6 +2093,9 @@ Args:
     input (Tensor): the numerator tensor
     other (Tensor or Scalar): the denominator
 
+Keyword args:
+    {out}
+
 Example::
 
     >>> a = torch.tensor([4.0, 3.0])
